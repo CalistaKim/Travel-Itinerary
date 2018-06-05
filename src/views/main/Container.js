@@ -1,7 +1,8 @@
 import React, { PropTypes as T } from 'react'
-
+import Map, {GoogleApiWrapper} from 'google-maps-react'
 import Header from 'components/Header/Header'
 import styles from './styles.module.css'
+
 
 export class Container extends React.Component {
   renderChildren() {
@@ -12,6 +13,9 @@ export class Container extends React.Component {
     return React.Children.map(children,
               c => React.cloneElement(c, childProps));
   }
+  onReady(mapProps,map){
+    // will trigger a call to the googlemaps placesAPI
+  }
   render() {
     return (
       <div className={styles.wrapper}>
@@ -19,6 +23,7 @@ export class Container extends React.Component {
         <div className={styles.content}>
           {this.renderChildren()}
         </div>
+        <Map google={this.props.google} onReady={this.onReady.bind(this)}/>
       </div>
     )
   }
@@ -28,4 +33,8 @@ Container.contextTypes = {
   router: T.object
 }
 
-export default Container
+export default GoogleApiWrapper({
+  apiKey: __GAPI_KEY__
+})(Container)
+
+// export default Container
