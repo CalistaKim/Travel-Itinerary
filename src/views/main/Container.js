@@ -44,13 +44,15 @@ export class Container extends React.Component {
         Hello from the container
         <Map
           google={this.props.google}
+          className={styles.wrapper}
           onReady={this.onReady.bind(this)}
           visible={false}>
-
-          {this.state.places.map(place => {
-            return (<div key={place.id}>{place.name}</div>)
-          })}
-
+          <Header/>
+          <div className={styles.content}>
+            {this.state.places.map(place => {
+              return (<div key={place.id}>{place.name}</div>)
+            })}
+          </div>
         </Map>
       </div>
     )
