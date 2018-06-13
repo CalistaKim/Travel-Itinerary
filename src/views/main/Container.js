@@ -1,8 +1,9 @@
-import React, { PropTypes as T } from 'react'
-import Map, {GoogleApiWrapper} from 'google-maps-react'
-import Header from 'components/Header/Header'
-import styles from './styles.module.css'
-import {searchNearby} from 'utils/googleApiHelpers'
+import React, { PropTypes as T } from 'react';
+import Map, {GoogleApiWrapper} from 'google-maps-react';
+import Header from 'components/Header/Header';
+import Sidebar from 'components/Sidebar/Sidebar';
+import styles from './styles.module.css';
+import {searchNearby} from 'utils/googleApiHelpers';
 
 export class Container extends React.Component {
   constructor(props) {
@@ -48,6 +49,10 @@ export class Container extends React.Component {
           onReady={this.onReady.bind(this)}
           visible={false}>
           <Header/>
+          <Sidebar
+          title={'Restaurants'}
+          places={this.state.places}
+          />
           <div className={styles.content}>
             {this.state.places.map(place => {
               return (<div key={place.id}>{place.name}</div>)
