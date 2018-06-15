@@ -11,7 +11,7 @@ export class Item extends React.Component {
       <div
         className={styles.item}>
           <h1 className={classnames(styles.title)}>{place.name}</h1>
-          <span>{place.rating/5}</span>
+          <Rating percentage={place.rating/5}/>
       </div>
     )
   }
