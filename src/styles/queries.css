@@ -1,7 +1,9 @@
-@custom-media --screen-phone (width <= 35.5em);
-@custom-media --screen-phone-lg (width > 35.5em);
+@custom-media --screen-phone (width <= 568px);
+@custom-media --screen-phone-lg (width > 568px) and (width <= 768px);
 
-@custom-media --screen-sm var(--screen-phone) and (width < 48em);
-@custom-media --screen-md (width >= 48em) and (width < 64em);
-@custom-media --screen-lg (width >= 64em) and (width < 80em);
-@custom-media --screen-xl (width >= 80em);
+@custom-media --screen-sm var(--screen-phone) and (width < 768px);
+@custom-media --screen-md (width >= 768px) and (width < 1024px);
+@custom-media --screen-lg (width >= 1024px) and (width < 1280px);
+@custom-media --screen-xl (width >= 1280px);
+
+/*EM OR PX ??*/

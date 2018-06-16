@@ -1,5 +1,5 @@
 @import url("../../styles/base.css");
-
+@import url("../../styles/queries.css");
 .sidebar {
   height: 100%;
   top: var(--topbar-height);
@@ -7,9 +7,17 @@
   overflow: hidden;
 
   position: relative;
-  /*flex: 1;*/
   z-index: 0;
+  
+  flex-direction: column;
+  order: 1;
+  flex: 1;
 
+  @media (--screen-phone-lg) {
+    display: block;
+    flex-direction: row;
+    order: 2;
+  }
   .heading {
     flex: 1;
     background: #fff;
