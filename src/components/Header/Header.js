@@ -23,7 +23,7 @@ Header.propTypes = {
 }
 
 Header.defaultProps = {
-  title: 'yelp'
+  title: 'quickplan'
 }
 
 export default Header

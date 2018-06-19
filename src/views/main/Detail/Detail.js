@@ -15,6 +15,7 @@ export class Detail extends React.Component {
       location: {}
     }
   }
+  // lifecycle methods
   componentDidMount() {
     if (this.props.map) {
       this.getDetails(this.props.map);
@@ -52,10 +53,10 @@ export class Detail extends React.Component {
   }
   renderPhotos(place) {
     if (!place.photos || place.photos.length == 0) return;
-    const cfg = {maxWidth: 100, maxHeight: 100}
+    const maxsize = {maxWidth: 100, maxHeight: 100}
     return (<div className={styles.photoStrip}>
       {place.photos.map(p => {
-        const url = `${p.getUrl(cfg)}.png`
+        const url = `${p.getUrl(maxsize)}.png`
         return (<img key={url} src={url} />)
       })}
     </div>)
@@ -72,7 +73,6 @@ export class Detail extends React.Component {
       <div className={styles.wrapper}>
         <div className={styles.header}>
           <h2>{place.name}</h2>
-          <h1>TEST </h1>
         </div>
         <div className={styles.details}>
           {this.renderPhotos(place)}

@@ -1,0 +1,13 @@
+@import url("../../styles/base.css");
+@import url("../../styles/colors.css");
+@import url("../../styles/queries.css");
+
+
+.searchbar{
+  margin-top:100px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 120px 50px 120px;
+  border-bottom:2px solid var(--babyblue)
+}

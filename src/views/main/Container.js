@@ -5,15 +5,42 @@ import Sidebar from 'components/Sidebar/Sidebar';
 import styles from './styles.module.css';
 import {searchNearby} from 'utils/googleApiHelpers';
 
+import Plan from 'components/Plan/Plan';
+import Searchbar from 'components/Searchbar/Searchbar';
+import GoogleMap from 'components/GoogleMap/GoogleMap';
+
 export class Container extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       places: [],
-      pagination: null
+      pagination: null,
+      cityinp: null,
+      placeinp:null,
+      radiusinp:null,
+      lat: 35.689487 , 
+      lng: 139.691706 // Tokyo
+      // location: {lat: 43.653226 , lng: -79.383184} // Toronto
     }
   }
+
+  //SEARCHBAR
+
+
+  // PLAN
+  search(){
+    console.log('search called')
+  }
+
+  handleChange( {target} ) {
+    console.log('handleChange called')
+    this.setState({
+      [target.name]: target.value
+    });
+
+  }
+
   renderChildren() {
     const childProps = {
       ...this.props
@@ -25,7 +52,7 @@ export class Container extends React.Component {
    onReady(mapProps, map) {
     const {google} = this.props;
     const opts = {
-      location: map.center,
+      location: {lat: 43.653226 , lng: -79.383184},
       radius: '500',
       types: ['cafe']
     }
@@ -37,6 +64,7 @@ export class Container extends React.Component {
         })
       }).catch((status, result) => {
         // There was an error
+        console.log('status: '+status+' \nresult: '+result)
       })
   }
   onMarkerClick(item) {
@@ -44,6 +72,7 @@ export class Container extends React.Component {
     const {push} = this.context.router;
     push(`/map/detail/${place.place_id}`)
   }
+
   render() {
     let children = null;
     if (this.props.children) {
@@ -57,35 +86,51 @@ export class Container extends React.Component {
           onMarkerClick: this.onMarkerClick.bind(this)
         });
     }
+
+    const style = {
+      width: '100vw',
+      height: '100vh'
+    }
     return (
-      <div>
-        Hello from the container
-        <Map
-          google={this.props.google}
-          className={styles.wrapper}
-          onReady={this.onReady.bind(this)}
-          visible={false}>
+      <div style={style}>
+        <GoogleMap 
+        google={this.props.google} 
+        initialCenter={{lat: 37.774929,lng: -122.419416}}
+        zoom={15}
+        style={{ position: 'static'}}
+        />
+          {/*
           <Header/>
-          <Sidebar
-            title={'Restaurants'}
-            places={this.state.places}
-            />
-          <div className={styles.content}>
-            {/* Setting children routes to be rendered*/}
-            {children}
-          </div>
-        </Map>
+          <Searchbar/>
+          <Plan
+          onChange={this.handleChange.bind(this)}
+          onClick={this.search.bind(this)}
+          />
+          <Map
+            google={this.props.google}
+            className={styles.wrapper}
+            onReady={this.onReady.bind(this)}
+            center={{lat:this.state.lat, lng:this.state.lng}}
+            visible={false}>
+            <Sidebar
+              title={'Cafes'}
+              places={this.state.places}
+              />
+            <div className={styles.content}> 
+              {children} // Setting children routes to be rendered. Contains Map and Details 
+            </div>
+          </Map> */}
       </div>
     )
   }
 }
+
+// when user clicks on a map marker, will need to send to details route with placeID
+// router used to push the user's browser to another route 
+// contextType used to define the context of the container (used in onMarkerClick)
 Container.contextTypes = {
   router: React.PropTypes.object
 }
-
-// Container.contextTypes = {
-//   router: T.object
-// }
 
 export default GoogleApiWrapper({
   apiKey: __GAPI_KEY__

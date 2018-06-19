@@ -1,0 +1,19 @@
+@import url("../../styles/base.css");
+@import url("../../styles/colors.css");
+@import url("../../styles/queries.css");
+
+.divspace{
+	background:red;
+	padding:100px 50px 50px 50px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.search_input{
+  width:50%;
+  margin:10px 0;
+}
+.searchbtn{
+  width:50%;
+  margin-top:10px;
+}
