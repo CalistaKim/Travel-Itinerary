@@ -8,6 +8,7 @@ import {searchNearby} from 'utils/googleApiHelpers';
 import Plan from 'components/Plan/Plan';
 import Searchbar from 'components/Searchbar/Searchbar';
 import GoogleMap from 'components/GoogleMap/GoogleMap';
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 
 export class Container extends React.Component {
   constructor(props) {
@@ -19,14 +20,17 @@ export class Container extends React.Component {
       cityinp: null,
       placeinp:null,
       radiusinp:null,
-      lat: 35.689487 , 
-      lng: 139.691706 // Tokyo
-      // location: {lat: 43.653226 , lng: -79.383184} // Toronto
+      location: {lat: 35.689487 , lng: 139.691706} // Toronto
     }
   }
 
   //SEARCHBAR
-
+  getlatLng = (latLng) => {
+    console.log('THIS IS THE CALLBACK: '+latLng)
+    this.setState({ location: latLng });
+    
+    console.log('new state: '+this.state.location.lat+' , '+this.state.location.lat  )
+  }
 
   // PLAN
   search(){
@@ -87,17 +91,17 @@ export class Container extends React.Component {
         });
     }
 
-    const style = {
-      width: '100vw',
-      height: '100vh'
-    }
     return (
       <div id="mapcontainer" className={styles.mapcontainer}>
+        <Searchbar
+        callback={this.getlatLng}
+        />
         <GoogleMap 
         google={this.props.google} 
-        initialCenter={{lat: 43.653226,lng: -79.383184}}
+        center={this.state.location}
         zoom={15}
         />
+
           {/*
           <Header/>
           <Searchbar/>

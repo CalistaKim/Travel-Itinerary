@@ -3,24 +3,20 @@ import React, { PropTypes as T } from 'react'
 import classnames from 'classnames'
 import { Marker } from 'google-maps-react'
 
+import Searchbar from '../../components/Searchbar/Searchbar';
+
 export class GoogleMap extends React.Component {
-  constructor(props) {
-    super(props);
 
-    const {lat, lng} = this.props.initialCenter;
-    this.state = {
-      currentLocation: {
-        lat: lat,
-        lng: lng
-      }
-    }
+  componentWillReceiveProps(newprops){
+    console.log('google maps got new props', newprops)
+    this.loadMap(newprops);
   }
-
-  componentDidMount() {
+  componentDidMount(newprops) {
     this.loadMap();
   }
 
-  loadMap() {
+  loadMap(newprops=null) {
+    console.log('map loading')
     if (this.props && this.props.google) {
       // google is available
       const {google} = this.props;
@@ -28,15 +24,24 @@ export class GoogleMap extends React.Component {
 
       const mapRef = this.refs.googlemap;
       const node = ReactDOM.findDOMNode(mapRef);
-      console.log(node)
 
-      let {initialCenter, zoom} = this.props;
-      // let {lat, lng} = initialCenter;
-      const {lat, lng} = this.state.currentLocation;
-      const center = new maps.LatLng(lat, lng)
+      var {center, zoom} = this.props;
+      var {lat, lng} = center;
+
+      if (newprops){
+        center = newprops.center;
+        zoom = newprops.zoom;
+        var {lat, lng} = center;
+      }
+
+      
+
+      console.log('2> map loading lat, lng: '+lat, lng)
+      // const {lat, lng} = this.props.currentLocation;
+      const coords = new maps.LatLng(lat, lng)
       
       const mapConfig = Object.assign({}, {
-        center: center,
+        center: coords,
         zoom: zoom,
         mapTypeControl:false,
       })

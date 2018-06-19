@@ -32,10 +32,6 @@
   }
 }
 
-.gmnoprint{
-  display: none;
-}
-
-.mapcontainer div:first-child{
+.mapcontainer > div:nth-child(2){
   height:100vh;
 }

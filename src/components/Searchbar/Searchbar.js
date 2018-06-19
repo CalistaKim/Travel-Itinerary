@@ -12,14 +12,14 @@ class LocationSearchInput extends React.Component {
   handleChange = (address) => {
     this.setState({ address })
   }
- 
+
   handleSelect = (address) => {
     geocodeByAddress(address)
       .then(results => getLatLng(results[0]))
       .then(
         latLng => {
           console.log('Success', latLng)
-          this.setState({location:latLng})
+          this.props.callback(latLng);
         }
 
       )
@@ -32,6 +32,7 @@ class LocationSearchInput extends React.Component {
         value={this.state.address}
         onChange={this.handleChange}
         onSelect={this.handleSelect}
+        callback={this.props.callback}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps }) => (
           <div className={styles.searchbar}>
