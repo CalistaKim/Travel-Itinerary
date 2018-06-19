@@ -92,12 +92,12 @@ export class Container extends React.Component {
       height: '100vh'
     }
     return (
-      <div style={style}>
+      <div id="mapcontainer" className={styles.mapcontainer}>
         <GoogleMap 
         google={this.props.google} 
         initialCenter={{lat: 37.774929,lng: -122.419416}}
         zoom={15}
-        style={{ position: 'static'}}
+        defaultOptions={{mapTypeControl: false}}
         />
           {/*
           <Header/>

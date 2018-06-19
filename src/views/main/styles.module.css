@@ -31,3 +31,11 @@
     order: 1;
   }
 }
+
+.gmnoprint{
+  display: none;
+}
+
+.mapcontainer div:first-child{
+  height:100vh;
+}

@@ -27,18 +27,20 @@ export class GoogleMap extends React.Component {
       const maps = google.maps;
 
       const mapRef = this.refs.googlemap;
+      const node = ReactDOM.findDOMNode(mapRef);
+      console.log(node)
 
-      node.style.position='static'
-      console.log('node style: '+node.style.position)
-
-      let {initialCenter, zoom} = this.props;
+      let {initialCenter, zoom, defaultOptions} = this.props;
       // let {lat, lng} = initialCenter;
       const {lat, lng} = this.state.currentLocation;
       const center = new maps.LatLng(lat, lng)
       
+      console.log(defaultOptions)
+      
       const mapConfig = Object.assign({}, {
         center: center,
-        zoom: zoom
+        zoom: zoom,
+        defaultOptions: defaultOptions
       })
 
       this.map = new maps.Map(node, mapConfig);
@@ -66,7 +68,8 @@ Map.defaultProps = {
   initialCenter: {
     lat: 37.774929,
     lng: -122.419416
-  }
+  },
+  mapTypeControl:false
 }
 
 export default GoogleMap
