@@ -11,10 +11,10 @@ describe('<Header />', () => {
     wrapper = shallow(<Header />)
   });
 
-  it('contains a title component with yelp', () => {
-    expect(wrapper.find('h1').first().text())
-        .to.equal('yelp')
-  });
+  // it('contains a title component with Travel Itinerary', () => {
+  //   expect(wrapper.find('h1').first().text())
+  //       .to.equal('Travel Itinerary')
+  // });
 
   it('contains topbar styling', () => {
     expect(wrapper.find(`.${styles.topbar}`))

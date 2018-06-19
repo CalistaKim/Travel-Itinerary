@@ -13,7 +13,7 @@ describe('<Item />', () =>{
 	beforeEach(() =>{
 		wrapper = shallow(<Item place={place} />)
 	});
-	it('contains a title component with yelp', () => {
+	it('contains a title component with the name of the city', () => {
 	  expect(wrapper.find('h1').first().text())
 	    .to.equal(place.name)
 	});

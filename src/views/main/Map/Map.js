@@ -41,6 +41,7 @@ export class MapComponent extends React.Component {
 	        google={this.props.google}
 	        className={styles.map}
 	        zoom={this.props.zoom}
+          initialCenter={{lat: 43.653226 , lng: -79.383184}}
 	        onRecenter={this.props.onMove}
 	        onDragend={this.props.onMove}
 	        onClick={this.props.onClick}
