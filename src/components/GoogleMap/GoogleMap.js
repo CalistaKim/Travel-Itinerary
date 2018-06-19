@@ -30,17 +30,15 @@ export class GoogleMap extends React.Component {
       const node = ReactDOM.findDOMNode(mapRef);
       console.log(node)
 
-      let {initialCenter, zoom, defaultOptions} = this.props;
+      let {initialCenter, zoom} = this.props;
       // let {lat, lng} = initialCenter;
       const {lat, lng} = this.state.currentLocation;
       const center = new maps.LatLng(lat, lng)
       
-      console.log(defaultOptions)
-      
       const mapConfig = Object.assign({}, {
         center: center,
         zoom: zoom,
-        defaultOptions: defaultOptions
+        mapTypeControl:false,
       })
 
       this.map = new maps.Map(node, mapConfig);

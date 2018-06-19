@@ -95,9 +95,8 @@ export class Container extends React.Component {
       <div id="mapcontainer" className={styles.mapcontainer}>
         <GoogleMap 
         google={this.props.google} 
-        initialCenter={{lat: 37.774929,lng: -122.419416}}
+        initialCenter={{lat: 43.653226,lng: -79.383184}}
         zoom={15}
-        defaultOptions={{mapTypeControl: false}}
         />
           {/*
           <Header/>
