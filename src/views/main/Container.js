@@ -17,32 +17,13 @@ export class Container extends React.Component {
     this.state = {
       places: [],
       pagination: null,
-      cityinp: null,
-      placeinp:null,
-      radiusinp:null,
-      location: {lat: 35.689487 , lng: 139.691706} // Toronto
+      location: {lat: 43.653226, lng: -79.383184} // Toronto
     }
   }
 
   //SEARCHBAR
   getlatLng = (latLng) => {
-    console.log('THIS IS THE CALLBACK: '+latLng)
     this.setState({ location: latLng });
-    
-    console.log('new state: '+this.state.location.lat+' , '+this.state.location.lat  )
-  }
-
-  // PLAN
-  search(){
-    console.log('search called')
-  }
-
-  handleChange( {target} ) {
-    console.log('handleChange called')
-    this.setState({
-      [target.name]: target.value
-    });
-
   }
 
   renderChildren() {
@@ -56,7 +37,7 @@ export class Container extends React.Component {
    onReady(mapProps, map) {
     const {google} = this.props;
     const opts = {
-      location: {lat: 43.653226 , lng: -79.383184},
+      location: this.state.location,
       radius: '500',
       types: ['cafe']
     }
@@ -71,6 +52,7 @@ export class Container extends React.Component {
         console.log('status: '+status+' \nresult: '+result)
       })
   }
+
   onMarkerClick(item) {
     const {place} = item; // place prop
     const {push} = this.context.router;
@@ -78,6 +60,7 @@ export class Container extends React.Component {
   }
 
   render() {
+    console.log('updated places :', this.state.places)
     let children = null;
     if (this.props.children) {
       // We have children in the Container component
@@ -92,16 +75,17 @@ export class Container extends React.Component {
     }
 
     return (
-      <div id="mapcontainer" className={styles.mapcontainer}>
+      <div>
         <Searchbar
         callback={this.getlatLng}
         />
+        <div id="mapcontainer" className={styles.mapcontainer}>
         <GoogleMap 
         google={this.props.google} 
         center={this.state.location}
         zoom={15}
+        onReady={this.onReady.bind(this)}
         />
-
           {/*
           <Header/>
           <Searchbar/>
@@ -123,6 +107,7 @@ export class Container extends React.Component {
               {children} // Setting children routes to be rendered. Contains Map and Details 
             </div>
           </Map> */}
+          </div>
       </div>
     )
   }
