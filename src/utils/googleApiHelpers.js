@@ -27,3 +27,16 @@ export function getDetails(google, map, placeId) {
     })
   })
 }
+
+export function getDirections(google, map, request){
+  return new Promise((resolve, reject) => {
+    const service = new google.maps.DirectionsService(map);
+    const directionsDisplay = new google.maps.DirectionsRenderer();
+
+    service.route(request, function(response, status) {
+      if (status == 'OK') {
+        directionsDisplay.setDirections(response);
+      }
+    })
+  })
+}

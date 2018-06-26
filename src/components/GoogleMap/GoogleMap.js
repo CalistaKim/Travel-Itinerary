@@ -1,53 +1,35 @@
 import ReactDOM from 'react-dom'
 import React, { PropTypes as T } from 'react'
-import classnames from 'classnames'
-import { Marker } from 'google-maps-react'
-
-import Searchbar from '../../components/Searchbar/Searchbar';
 
 export class GoogleMap extends React.Component {
   _renderChildren() {
     const {children} = this.props;
 
-    if (React.Children.count(children) > 0) {
-      return React.Children.map(children, c => {
-        return React.cloneElement(c, this.props, {
-          map: this.props.map,
-          google: this.props.google
-        })
-      })
-    } else {
-      return this._renderMarkers();
-    }
-  }
-  _renderMarkers() {
-    if (!this.props.places) {
-      return;
-    }
-    return this.props.places.map(p => {
-      return <Marker
-                key={p.id}
-                name={p.id}
-                place={p}
-                onClick={this.props.onMarkerClick.bind(this)}
-                map={this.props.map}
-                position={p.geometry.location} />
-    });
+    if (!children) return;
+
+    return React.Children.map(children, c => {
+      return React.cloneElement(c, {
+        map: this.map,
+        google: this.props.google,
+        mapCenter: this.props.center
+      });
+    })
   }
 
   componentWillReceiveProps(newprops){
+    // console.log('componentWillReceiveProps')
     if (newprops.center !== this.props.center){
-      this.loadMap(newprops, null);
-    }
+      this.loadMap(newprops);
+    } 
   }
 
   componentDidMount(newprops) {
-    console.log('componentDidMount')
+    // console.log('componentDidMount')
     this.loadMap();
   }
 
-  loadMap(newprops=null, sendonce=null) {
-    console.log('map loading')
+  loadMap(newprops=null) {
+    // console.log('map loading')
     if (this.props && this.props.google) {
       // google is available
       const {google} = this.props;
@@ -82,11 +64,11 @@ export class GoogleMap extends React.Component {
   }
 
   render() {
-    const {children} = this.props;
     return (
-        <div ref='googlemap'>
-          Loading map...
-        </div>
+      <div ref='googlemap'>
+        Loading map...
+        {this._renderChildren()}
+      </div>
     )
   }
 }
