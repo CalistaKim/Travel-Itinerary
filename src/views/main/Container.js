@@ -5,7 +5,8 @@ import Sidebar from 'components/Sidebar/Sidebar';
 import styles from './styles.module.css';
 import {searchNearby} from 'utils/googleApiHelpers';
 
-import Plan from 'components/Plan/Plan';
+// import Plan from 'components/Plan/Plan';
+import Marker from 'components/Marker/Marker';
 import Searchbar from 'components/Searchbar/Searchbar';
 import GoogleMap from 'components/GoogleMap/GoogleMap';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
@@ -26,15 +27,7 @@ export class Container extends React.Component {
     this.setState({ location: latLng });
   }
 
-  renderChildren() {
-    const childProps = {
-      ...this.props
-    };
-    const {children} = this.props;
-    return React.Children.map(children,
-              c => React.cloneElement(c, childProps));
-  }
-   onReady(mapProps, map) {
+  onReady(mapProps, map) {
     const {google} = this.props;
     const opts = {
       location: this.state.location,
@@ -60,7 +53,7 @@ export class Container extends React.Component {
   }
 
   render() {
-    console.log('updated places :', this.state.places)
+    // console.log('updated places :', this.state.places)
     let children = null;
     if (this.props.children) {
       // We have children in the Container component
@@ -73,7 +66,6 @@ export class Container extends React.Component {
           onMarkerClick: this.onMarkerClick.bind(this)
         });
     }
-
     return (
       <div>
         <Searchbar
@@ -85,7 +77,11 @@ export class Container extends React.Component {
         center={this.state.location}
         zoom={15}
         onReady={this.onReady.bind(this)}
-        />
+        >
+          <Marker 
+          places={this.state.places} 
+          />
+        </GoogleMap>
           {/*
           <Header/>
           <Searchbar/>
