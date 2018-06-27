@@ -25,6 +25,7 @@
 
   flex: 1;
   order: 2;
+  overflow: hidden;
 
   @media (--screen-phone-lg) {
     flex: 2;
