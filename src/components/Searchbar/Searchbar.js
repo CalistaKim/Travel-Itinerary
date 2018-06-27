@@ -1,7 +1,7 @@
-import React from 'react'
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+import React from 'react';
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import styles from './styles.module.css';
-import classnames from 'classnames'
+import classnames from 'classnames';
  
 class LocationSearchInput extends React.Component {
   constructor(props) {
@@ -20,9 +20,7 @@ class LocationSearchInput extends React.Component {
         latLng => {
           console.log('Success', latLng)
           this.props.callback(latLng);
-        }
-
-      )
+        })
       .catch(error => console.error('Error', error))
   }
  

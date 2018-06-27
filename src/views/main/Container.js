@@ -3,7 +3,8 @@ import Map, {GoogleApiWrapper} from 'google-maps-react';
 import Header from 'components/Header/Header';
 import Sidebar from 'components/Sidebar/Sidebar';
 import styles from './styles.module.css';
-import {searchNearby} from 'utils/googleApiHelpers';
+import {searchNearby, getDirections} from 'utils/googleApiHelpers';
+import classNames from 'classnames';
 
 // import Plan from 'components/Plan/Plan';
 import Marker from 'components/Marker/Marker';
@@ -34,6 +35,7 @@ export class Container extends React.Component {
       radius: '500',
       types: ['cafe']
     }
+
     searchNearby(google, map, opts)
       .then((results, pagination) => {
         this.setState({
@@ -44,6 +46,17 @@ export class Container extends React.Component {
         // There was an error
         console.log('status: '+status+' \nresult: '+result)
       })
+  }
+
+  createDirections(google, map, opts){
+    // console.log('creating directions')
+    // console.log('map: ',map)
+    getDirections(google, map, opts).then((response) => {
+      console.log(response)
+    }).catch((result, status) => {
+      // There was an error
+      console.log('status: '+status+' \nresult: '+result)
+    })
   }
 
   onMarkerClick(item) {
@@ -71,17 +84,27 @@ export class Container extends React.Component {
         <Searchbar
         callback={this.getlatLng}
         />
-        <div id="mapcontainer" className={styles.mapcontainer}>
-        <GoogleMap 
-        google={this.props.google} 
-        center={this.state.location}
-        zoom={15}
-        onReady={this.onReady.bind(this)}
-        >
-          <Marker 
-          places={this.state.places} 
+        <div className={styles.wrapper}>
+          <Sidebar
+            title={'Cafes'}
+            places={this.state.places}
           />
-        </GoogleMap>
+          <div id="mapcontainer" className={[styles.mapcontainer, styles.content].join(' ')}>
+            <GoogleMap 
+            google={this.props.google} 
+            center={this.state.location}
+            zoom={25}
+            onReady={this.onReady.bind(this)}
+            >
+              <Marker 
+              places={this.state.places}
+              center={this.state.location}
+              google={this.props.google} 
+              callback={this.createDirections.bind(this)}
+              />
+            </GoogleMap>
+          </div>
+
           {/*
           <Header/>
           <Searchbar/>

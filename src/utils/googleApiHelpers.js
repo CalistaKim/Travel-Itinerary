@@ -35,7 +35,14 @@ export function getDirections(google, map, request){
 
     service.route(request, function(response, status) {
       if (status == 'OK') {
+        console.log('DIRECTIONS STATUS OK')
+
+        directionsDisplay.setMap(map)
         directionsDisplay.setDirections(response);
+        resolve(response);
+      } else {
+        console.log('DIRECTIONS STATUS NOT OK')
+        reject(results, status);
       }
     })
   })
