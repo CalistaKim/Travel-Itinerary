@@ -6,7 +6,7 @@ export class Rating extends React.Component {
   render() {
     const {percentage} = this.props;
     const style = {
-      width: `${(percentage || 0) * 100}%`
+      width: `${(percentage || 0) * 81}%`
     }
     return (
       <div className={styles.sprite}>

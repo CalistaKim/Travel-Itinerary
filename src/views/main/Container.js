@@ -18,41 +18,87 @@ export class Container extends React.Component {
 
     this.state = {
       places: [],
-      pagination: null,
-      location: {lat: 43.653226, lng: -79.383184} // Toronto
+      home:null,
+      location: {lat: 43.653226, lng: -79.383184}, // Toronto
+      directions: null, 
     }
   }
 
-  //SEARCHBAR
-  getlatLng = (latLng) => {
-    this.setState({ location: latLng });
+  setContainerState = (stateobj) => {
+    var stateObject = function() {
+      var returnObj = {};
+      returnObj[stateobj.id] = stateobj.value;
+      console.log('returnObj ',returnObj)
+         return returnObj;
+    }.bind(event)();
+
+    // console.log('stateobject: ',stateObject)
+    this.setState( stateObject );    
   }
 
   onReady(mapProps, map) {
     const {google} = this.props;
-    const opts = {
-      location: this.state.location,
-      radius: '500',
-      types: ['cafe']
-    }
 
-    searchNearby(google, map, opts)
+    // 1. update places in state to only contain one cafe
+    // 2. add arrival / departure to schedule, under name + rating 
+    // 3. create loop to search Nearby for cafe + restaurant
+    // 4. create travel style test
+
+    let placetypes=['cafe', 'restaurant']
+    var places=[];
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    }
+    
+    for (let i=0; i < placetypes.length; i++){
+      const opts = {
+        location: this.state.location,
+        radius: '500',
+        types: [placetypes[i]]
+      }
+
+      searchNearby(google, map, opts)
       .then((results, pagination) => {
+
+        // collecting places a minimum of 4 star rating
+        let numplaces=results.length;
+        let temparray=[]
+        for (let i=0; i< numplaces; i++){
+          if(results[i].rating >= 4.0){
+            // console.log(results[i].name+' rating: '+results[i].rating)
+            temparray.push(results[i])
+          }
+        }
+        if (temparray.length==0){
+          console.log('NO NEARBY '+placetypes[i]+'s FOUND')
+          places=[{
+            name:'No nearby '+placetypes[i]+'s found',
+            rating:0,
+            id:'invalid',
+          }]
+        }
+        else{ places.push(temparray[getRandomInt(temparray.length)]) }
+
         this.setState({
-          places: results,
-          pagination
+          places: places
         })
       }).catch((status, result) => {
         // There was an error
         console.log('status: '+status+' \nresult: '+result)
       })
+    }
+
   }
 
   createDirections(google, map, opts){
-    // console.log('creating directions')
-    // console.log('map: ',map)
+    console.log('creating directions')
+
     getDirections(google, map, opts).then((response) => {
-      console.log(response)
+      // console.log('directions object: ',response.routes[0].legs[0])
+      this.setState({
+        directions: response.routes[0].legs[0]
+      })
     }).catch((result, status) => {
       // There was an error
       console.log('status: '+status+' \nresult: '+result)
@@ -82,22 +128,24 @@ export class Container extends React.Component {
     return (
       <div>
         <Searchbar
-        callback={this.getlatLng}
+        callback={this.setContainerState}
         />
         <div className={styles.wrapper}>
           <Sidebar
-            title={'Cafes'}
+            title={'Schedule'}
             places={this.state.places}
+            directions={this.state.directions}
+            home={this.state.home}
           />
           <div id="mapcontainer" className={[styles.mapcontainer, styles.content].join(' ')}>
             <GoogleMap 
+            places={this.state.places}
             google={this.props.google} 
             center={this.state.location}
-            zoom={25}
+            zoom={15}
             onReady={this.onReady.bind(this)}
             >
               <Marker 
-              places={this.state.places}
               center={this.state.location}
               google={this.props.google} 
               callback={this.createDirections.bind(this)}

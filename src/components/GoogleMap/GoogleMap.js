@@ -12,13 +12,14 @@ export class GoogleMap extends React.Component {
       return React.cloneElement(c, {
         map: this.map,
         google: this.props.google,
-        mapCenter: this.props.center
+        mapCenter: this.props.center,
+        places: this.props.places
       });
     })
   }
 
   componentWillReceiveProps(newprops){
-    // console.log('componentWillReceiveProps')
+    console.log('componentWillReceiveProps')
     if (newprops.center !== this.props.center){
       this.loadMap(newprops);
     } 
@@ -30,7 +31,7 @@ export class GoogleMap extends React.Component {
   }
 
   loadMap(newprops=null) {
-    // console.log('map loading')
+    console.log('map loading')
     if (this.props && this.props.google) {
       // google is available
       const {google} = this.props;
@@ -39,7 +40,6 @@ export class GoogleMap extends React.Component {
       const node = ReactDOM.findDOMNode(mapRef);
       var {center, zoom} = this.props;
       var {lat, lng} = center;
-
 
       if (newprops){
         center = newprops.center;
@@ -60,14 +60,6 @@ export class GoogleMap extends React.Component {
         this.props.onReady(google, this.map)
       })
       maps.event.trigger(this.map, 'ready');
-      
-      var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-      let pref = {
-        map: maps,
-        position:coords,
-        icon: image
-      }
-      this.marker = new google.maps.Marker(pref);
 
     }
   }

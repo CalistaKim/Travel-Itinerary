@@ -9,7 +9,11 @@ export class Sidebar extends React.Component {
         <div className={styles.heading}>
           <h1>{this.props.title}</h1>
         </div>
-        <Listing places={this.props.places}/>
+        <Listing 
+        home={this.props.home}
+        places={this.props.places}
+        directions={this.props.directions}
+        />
       </div>
     )
   }
