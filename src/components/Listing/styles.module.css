@@ -4,10 +4,27 @@
   padding-bottom: 60px;
   margin: 0;
 }
+
 .itemContainer{
   border-bottom: 1px solid #eeeeee;
   padding: 10px;
+  cursor:pointer;
 }
+
+.active{
+  background:#f7d1bf;
+}
+.step{
+  background:white;
+}
+.photoStrip {
+    flex: 1;
+    display: flex;
+    overflow: auto;
+    img {
+      margin: 0 1px;
+    }
+  }
 
 .item {
   display: flex;

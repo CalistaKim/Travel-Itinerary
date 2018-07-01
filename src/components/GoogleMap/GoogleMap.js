@@ -16,24 +16,24 @@ export class GoogleMap extends React.Component {
         places: this.props.places
       });
     })
+    
   }
 
   componentWillReceiveProps(newprops){
-    console.log('componentWillReceiveProps')
     if (newprops.center !== this.props.center){
+      // console.log('GoogleMap got newprops: ',newprops.center)
       this.loadMap(newprops);
     } 
   }
 
   componentDidMount(newprops) {
-    // console.log('componentDidMount')
+    // console.log('GoogleMap component mounting')
     this.loadMap();
   }
 
   loadMap(newprops=null) {
-    console.log('map loading')
+    console.log('GoogleMap loading')
     if (this.props && this.props.google) {
-      // google is available
       const {google} = this.props;
       const maps = google.maps;
       const mapRef = this.refs.googlemap;
@@ -56,10 +56,14 @@ export class GoogleMap extends React.Component {
 
       this.map = new maps.Map(node, mapConfig);
 
+
       this.map.addListener('ready', (evt) => {
         this.props.onReady(google, this.map)
       })
-      maps.event.trigger(this.map, 'ready');
+
+      maps.event.trigger(this.map, 'ready'); 
+    
+
 
     }
   }

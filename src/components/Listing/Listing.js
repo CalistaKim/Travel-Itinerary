@@ -5,36 +5,66 @@ import Item from './Item';
 import styles from './styles.module.css'
 
 export class Listing extends React.Component {
-  render() {
-    let home = "Toronto, Ontario"
-    let origin = this.props.home
-    let types = ["locality", "political"];
 
-    if (origin){
-      home = origin.formatted_address
-      types = origin.types
-    }
+  renderFirstItem(){
+    let home = this.props.home
+    let origin = home.formatted_address
+    let types = home.types
+    return(
+      <div className={styles.itemContainer}>
+        <h1>{origin}</h1>
+        { types.map((type,index) => {
+          return(
+            <p key={type+'_'+index} >{type}</p>
+          )
+        })}
+      </div>
+    )
+  }
+
+  testfunction(){
+    console.log('test')
+  }
+
+
+  renderScheduleItems(){
+    let scheduleitems
+    scheduleitems = this.props.places.map((place,index) => {
+      // console.log('each listing place: ', place)
+      let active = (index === 0) ? true : false; 
+      let directions = (active) ? this.props.directions : null;
+      let gotDetails = (place.photos) ? true: false
+      let {map, google} = this.props;
+      let destination = place.geometry.location
+      let opts = {}
+      // let opts = {
+      //   origin: center,
+      //   destination: destination,
+      //   travelMode: google.maps.TravelMode[selectedMode]
+      // }
+
+      // let callback=this.props.callback
+      return (
+        <Item 
+        place={place}
+        onClick={this.props.onClick}
+        key={place.id+'_'+index} 
+        directions={directions}
+        isActive={active}
+        gotDetails={gotDetails}
+        onClick={this.testfunction}
+        />
+      )
+    })
+    return scheduleitems
+  }
+  
+  render() {
     return (
       <div className={classnames(styles.container)}>
-        <div className={styles.itemContainer}>
-          <h1>{home}</h1>
-          { types.map(type => {
-            return(
-              <p key={type} >{type}</p>
-            )
-          })}
-        </div>
-      {
-        this.props.places.map(place => {
-        return (
-          <Item 
-          place={place}
-          onClick={this.props.onClick}
-          key={place.id} 
-          directions={this.props.directions}
-          />
-        )
-      })}
+      {this.renderFirstItem()}
+
+      {this.renderScheduleItems()}
       </div>
     )
   }
