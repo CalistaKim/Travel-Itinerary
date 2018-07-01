@@ -14,12 +14,17 @@ class LocationSearchInput extends React.Component {
   }
 
   handleSelect = (address) => {
+    console.log('handleSelect')
     geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
+      .then( (results) => { 
+        var stateobject ={ id: 'home', value:results[0] }
+        this.props.callback(stateobject);
+        return getLatLng(results[0]) })
       .then(
         latLng => {
-          console.log('Success', latLng)
-          this.props.callback(latLng);
+          // console.log('Success', latLng)
+          var stateobject ={ id: 'location', value:latLng }
+          this.props.callback(stateobject);
         })
       .catch(error => console.error('Error', error))
   }
