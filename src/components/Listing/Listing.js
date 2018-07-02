@@ -22,28 +22,19 @@ export class Listing extends React.Component {
     )
   }
 
-  testfunction(){
-    console.log('test')
-  }
-
-
   renderScheduleItems(){
     let scheduleitems
     scheduleitems = this.props.places.map((place,index) => {
       // console.log('each listing place: ', place)
-      let active = (index === 0) ? true : false; 
+      let activeIndex = (this.props.activeIndex) ? this.props.activeIndex : false
+      
+      // console.log('IN LISTING: ACTIVEINDEX '+activeIndex)
+
+      let active = ( index === activeIndex || (!activeIndex && index==0) ) ? true : false; 
       let directions = (active) ? this.props.directions : null;
       let gotDetails = (place.photos) ? true: false
       let {map, google} = this.props;
-      let destination = place.geometry.location
-      let opts = {}
-      // let opts = {
-      //   origin: center,
-      //   destination: destination,
-      //   travelMode: google.maps.TravelMode[selectedMode]
-      // }
-
-      // let callback=this.props.callback
+      let step = index
       return (
         <Item 
         place={place}
@@ -52,7 +43,7 @@ export class Listing extends React.Component {
         directions={directions}
         isActive={active}
         gotDetails={gotDetails}
-        onClick={this.testfunction}
+        onClick={() => this.props.callback(google,map,this.props.places,step, active)}
         />
       )
     })

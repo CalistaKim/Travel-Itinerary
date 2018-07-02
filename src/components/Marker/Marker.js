@@ -19,7 +19,11 @@ export class mapMarker extends React.Component {
     } = newprops;
 
     // this will be dynamically set as the user browses through steps
-    let step=0;
+    var step=0;
+    if (this.props.activeIndex){
+      step = this.props.activeIndex
+    }
+  
     if(places[step].geometry.location){
       let destination = places[step].geometry.location
       let selectedMode='DRIVING'
@@ -28,7 +32,7 @@ export class mapMarker extends React.Component {
         destination: destination,
         travelMode: google.maps.TravelMode[selectedMode]
       }
-      newprops.callback(google, map, opts)
+      newprops.callback(google, map, opts, step)
     }
   
   }
