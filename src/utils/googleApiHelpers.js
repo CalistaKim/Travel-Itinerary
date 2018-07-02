@@ -44,22 +44,26 @@ export function getDetails(google, map, placeId) {
   })
 }
 
-export function getDirections(google, map, request){
+export function getDirections(google, map, request, directionsDisplay=null){
   return new Promise((resolve, reject) => {
+
     const service = new google.maps.DirectionsService(map);
-    const directionsDisplay = new google.maps.DirectionsRenderer();
 
-    service.route(request, function(response, status) {
-      if (status == 'OK') {
-        // console.log('DIRECTIONS STATUS OK')
+    if(directionsDisplay){
+      service.route(request, function(response, status) {
+        if (status == 'OK') {
+          // console.log('DIRECTIONS STATUS OK')
+          directionsDisplay.setMap(null)
+          directionsDisplay.setMap(map)
+          directionsDisplay.setDirections(response);
 
-        directionsDisplay.setMap(map)
-        directionsDisplay.setDirections(response);
-        resolve(response);
-      } else {
-        // console.log('DIRECTIONS STATUS NOT OK')
-        reject(results, status);
-      }
-    })
+          resolve(response);
+
+        } else {
+          // console.log('DIRECTIONS STATUS NOT OK')
+          reject(results, status);
+        }
+      })
+    } // directionsDisplayend
   })
 }

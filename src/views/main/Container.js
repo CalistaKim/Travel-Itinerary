@@ -7,11 +7,11 @@ import styles from './styles.module.css';
 import {searchNearby, getDirections, getDetails} from 'utils/googleApiHelpers';
 import classNames from 'classnames';
 
-// import Plan from 'components/Plan/Plan';
 import Marker from 'components/Marker/Marker';
 import Searchbar from 'components/Searchbar/Searchbar';
 import GoogleMap from 'components/GoogleMap/GoogleMap';
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import Quiz from 'components/Quiz/Quiz';
 
 export class Container extends React.Component {
   constructor(props) {
@@ -23,7 +23,11 @@ export class Container extends React.Component {
       location: {lat: 43.653226, lng: -79.383184}, // Toronto
       directions: null, 
       details:null,
-      map:null
+      map:null,
+      directionsDisplay:null,
+      activeIndex:null,
+      stylekey:null,
+      showquiz:true
     }
   }
 
@@ -35,7 +39,7 @@ export class Container extends React.Component {
       return returnObj;
     }.bind(event)();
 
-    console.log('stateobject: ',stateObject)
+    // console.log('stateobject: ',stateObject)
     this.setState( stateObject );    
   }
 
@@ -90,13 +94,25 @@ export class Container extends React.Component {
 
     } 
 
-  createDirections(google, map, opts){
+  createDirections(google, map, opts, index){
     // console.log('creating directions')
-    getDirections(google, map, opts).then((response) => {
+    // console.log('createDirections index '+index)
+    var directionsDisplay = null
+    if (!this.state.directionsDisplay){
+      directionsDisplay = new google.maps.DirectionsRenderer();
+      this.setState({directionsDisplay:directionsDisplay})
+    }
+
+    getDirections(google, map, opts, this.state.directionsDisplay)
+    .then((response) => {
       this.setState({
         directions: response.routes[0].legs[0],
         map:map
       })
+      if(index!=null){
+        this.setState({activeIndex:index})
+        // console.log('setstate index '+this.state.activeIndex)
+      }
       // console.log('map : ', this.state.map)
     }).catch((result, status) => {
       // There was an error
@@ -110,43 +126,54 @@ export class Container extends React.Component {
     push(`/map/detail/${place.place_id}`)
   }
 
-  onItemClick(google,map,opts){
-    console.log('CLICKED1!!')
-    // let opts = {
-    //   origin: mapCenter,
-    //   destination: destination,
-    //   travelMode: google.maps.TravelMode[selectedMode]
-    // }
-    // this.createDirections(google,map,opts)
+  onItemClick(google,map,places,index, isActive){
+    // console.log('all places: ',places)
+    // console.log('onItemClick index '+index)
+    var origin = this.state.location
+    let destination = this.state.places[index].geometry.location
+    
+    if(isActive == true){
+      console.log('step is already active')
+      return
+    }
+    if(index > 0){
+      origin = this.state.places[index-1].geometry.location
+    }
+
+    let opts = {
+      origin: origin,
+      destination: destination,
+      travelMode: google.maps.TravelMode['DRIVING']
+    }
+    this.createDirections(google,map,opts,index)
   }
 
   shouldComponentUpdate(nextProps,nextState){
     if( (this.state.places != nextState.places) || (this.state.directions != nextState.directions)  
       || (this.state.home != nextState.home) || (this.state.location != nextState.location)
+      || (this.state.activeIndex != nextState.activeIndex)
     ){
       // console.log('places changed: \n this.state: ',this.state.places,'next state: ', nextState.places)
+      return true
+    }
+    else if(this.state.showquiz != nextState.showquiz){
       return true
     }
 
     return false
   }
+  renderQuiz(){
+    if(this.state.showquiz){
+      return(
+        <Quiz callback={this.setContainerState}/> 
+      )
+    }
+  }
 
   render() {
-    // console.log('updated places :', this.state.places)
-    let children = null;
-    if (this.props.children) {
-      // We have children in the Container component
-       children = React.cloneElement(
-        this.props.children,
-        {
-          google: this.props.google,
-          places: this.state.places,
-          loaded: this.props.loaded,
-          onMarkerClick: this.onMarkerClick.bind(this)
-        });
-    }
     return (
       <div>
+        {this.renderQuiz()}
         <Searchbar
         callback={this.setContainerState}
         />
@@ -159,6 +186,7 @@ export class Container extends React.Component {
             map={this.state.map}
             google={this.props.google}
             callback={this.onItemClick.bind(this)}
+            activeIndex={this.state.activeIndex}
           />
           <div id="mapcontainer" className={[styles.mapcontainer, styles.content].join(' ')}>
             <GoogleMap 
@@ -172,6 +200,7 @@ export class Container extends React.Component {
               center={this.state.location}
               google={this.props.google} 
               callback={this.createDirections.bind(this)}
+              activeIndex={this.state.activeIndex}
               />
             </GoogleMap>
           </div>
