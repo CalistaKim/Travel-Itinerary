@@ -29,9 +29,11 @@ export class Container extends React.Component {
       stylekey:null,
       showquiz:true
     }
+    this.onReady = this.onReady.bind(this)
   }
 
   setContainerState = (stateobj) => {
+
     var stateObject = function() {
       var returnObj = {};
       returnObj[stateobj.id] = stateobj.value;
@@ -45,19 +47,38 @@ export class Container extends React.Component {
 
   onReady(mapProps, map) {
     const {google} = this.props;
-    let placetypes=['cafe', 'restaurant'];
-    let places=[];
+    var placetypes=['cafe', 'restaurant'];
+    var places=[];
+
+    if (this.state.stylekey){
+
+      var typekey=this.state.stylekey.types[0] 
+      console.log('onready typekey',typekey)
+      // find the highest value key in types
+      var travelType = Object.keys(typekey).reduce((a, b) => typekey[a] > typekey[b] ? a : b);
+      console.log('travel type is: '+travelType)
+      switch(travelType){
+        case 'nature':
+          placetypes=['cafe','campground','aquarium','restaurant'];
+          break
+        case 'artistic':
+          placetypes=['bakery', 'book_store', 'art_gallery','restaurant'];
+          break
+        case 'metropolitan':
+          placetypes=['cafe', 'shopping_mall', 'restaurant'];
+          break
+      }
+    }
 
     for (let i=0; i < placetypes.length; i++){
       const opts = {
         location: this.state.location,
-        radius: '500',
+        radius: '5000',
         types: [placetypes[i]]
       }
       searchNearby(google, map, opts)
       .then((results, pagination) => {
-        // collecting places a minimum of 4 star rating
-        let numplaces=results.length;
+        var numplaces=results.length;
         
         if (results.length==0){
           places=[{
@@ -77,7 +98,7 @@ export class Container extends React.Component {
           var placesarray=[]
 
           for (let i=0; i<places.length; i++){
-            let placeid=places[i].place_id
+            var placeid=places[i].place_id
             getDetails(google,map,placeid).then(details => {
 
               placesarray.push(details)
@@ -159,6 +180,10 @@ export class Container extends React.Component {
     else if(this.state.showquiz != nextState.showquiz){
       return true
     }
+    else if(this.state.stylekey != nextState.stylekey){
+      console.log('stylekey different')
+      return true
+    }
 
     return false
   }
@@ -169,11 +194,11 @@ export class Container extends React.Component {
       )
     }
   }
-
-  render() {
-    return (
+  renderEverything(){
+    if(!this.state.showquiz){
+      return(
       <div>
-        {this.renderQuiz()}
+        <Header/>
         <Searchbar
         callback={this.setContainerState}
         />
@@ -205,6 +230,16 @@ export class Container extends React.Component {
             </GoogleMap>
           </div>
         </div>
+      </div>
+      )
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderQuiz()}
+        {this.renderEverything()}
       </div>
     )
   }

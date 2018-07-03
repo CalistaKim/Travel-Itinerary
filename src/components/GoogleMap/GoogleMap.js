@@ -20,7 +20,8 @@ export class GoogleMap extends React.Component {
   }
 
   componentWillReceiveProps(newprops){
-    if (newprops.center !== this.props.center){
+
+    if (newprops.center !== this.props.center ){
       // console.log('GoogleMap got newprops: ',newprops.center)
       this.loadMap(newprops);
     } 
