@@ -17,14 +17,14 @@ export class Quiz extends React.Component{
     this.state = {
       page:0,
       content: qcontent,
-      stylekey:{tempo:0, price: 0, metropolitan:0, artistic:0, nature:0},
+      stylekey:{general:[{tempo:0, price: 0}], types:[{metropolitan:0, artistic:0, nature:0}] },
       quizend:false
     }
     // this.getQuestions= this.getQuestions.bind(this)
   }
 
   getQuestions(page){
-    console.log('page: ',page)
+    // console.log('page: ',page)
     var content = this.state.content.content[page]
     var question = content.question
     var answers = content.answers
@@ -47,15 +47,25 @@ export class Quiz extends React.Component{
     }
     selectAnswer(page, weight){
       var stylekey = this.state.stylekey
+      var typekey = this.state.stylekey.types[0]
+      var generalkey = this.state.stylekey.general[0]
+
+      
+      // console.log('stylekey.typekey',stylekey.types[0])
       Object.keys(weight).map(key =>{
-        if(key in stylekey){
-          stylekey[key]=stylekey[key]+weight[key]
+        if(key in typekey){
+
+          typekey[key]=typekey[key]+weight[key]
+
+        }else if(key in generalkey){
+
+          generalkey[key]=generalkey[key]+weight[key]
         }
       })
       if (page == 4) {
         // checking to see if are any two styles which are weighted the same at the end of the quiz 
         // if a match is found, another question is asked to give one style more weighting
-        var sk = this.state.stylekey
+        var sk = typekey
         var met = sk.metropolitan
         var art = sk.artistic
         var nat = sk.nature
@@ -78,7 +88,7 @@ export class Quiz extends React.Component{
           return
         }
       }
-      console.log(stylekey)
+      // console.log(stylekey)
       this.setState({
         page:page+1
       })
